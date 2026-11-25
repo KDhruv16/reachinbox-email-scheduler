@@ -45,12 +45,6 @@ export async function requireAuth(req: AuthRequest, res: Response, next: NextFun
     }
 
     if (!token) {
-      if (ENV.DEV_AUTH_BYPASS) {
-        // Fallback to dev user in development mode
-        const devUser = await getOrCreateDevUser();
-        req.user = devUser;
-        return next();
-      }
       return res.status(401).json({ error: 'Authentication required' });
     }
 
@@ -61,22 +55,12 @@ export async function requireAuth(req: AuthRequest, res: Response, next: NextFun
       });
 
       if (!user) {
-        if (ENV.DEV_AUTH_BYPASS) {
-          const devUser = await getOrCreateDevUser();
-          req.user = devUser;
-          return next();
-        }
         return res.status(401).json({ error: 'User no longer exists' });
       }
 
       req.user = user;
       next();
     } catch (jwtErr) {
-      if (ENV.DEV_AUTH_BYPASS) {
-        const devUser = await getOrCreateDevUser();
-        req.user = devUser;
-        return next();
-      }
       return res.status(401).json({ error: 'Invalid or expired token' });
     }
   } catch (err: any) {

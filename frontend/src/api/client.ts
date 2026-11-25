@@ -11,6 +11,14 @@ export const apiClient = axios.create({
   },
 });
 
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('reachinbox_token');
+  if (token && !config.headers.Authorization) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export const authApi = {
   me: async (): Promise<{ user: User }> => {
     const res = await apiClient.get('/api/auth/me');
@@ -18,10 +26,14 @@ export const authApi = {
   },
   devLogin: async (): Promise<{ user: User }> => {
     const res = await apiClient.post('/api/auth/dev-login');
+    if (res.data?.token) {
+      localStorage.setItem('reachinbox_token', res.data.token);
+    }
     return res.data;
   },
   logout: async (): Promise<void> => {
-    await apiClient.post('/api/auth/logout');
+    localStorage.removeItem('reachinbox_token');
+    await apiClient.post('/api/auth/logout').catch(() => {});
   },
 };
 

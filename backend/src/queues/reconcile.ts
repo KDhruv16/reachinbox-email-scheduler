@@ -51,6 +51,7 @@ export async function reconcileScheduledEmails(): Promise<{ restored: number; or
         hourlyLimit: true,
         delayBetweenEmailsMs: true,
         bullmqJobId: true,
+        idempotencyKey: true,
       },
       orderBy: { scheduledAt: 'asc' },
       take: 1000,
@@ -88,6 +89,7 @@ export async function reconcileScheduledEmails(): Promise<{ restored: number; or
             body: email.body,
             hourlyLimit: email.hourlyLimit,
             delayBetweenEmailsMs: email.delayBetweenEmailsMs,
+            idempotencyKey: email.idempotencyKey,
           },
           delayMs,
           jobId

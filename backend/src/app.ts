@@ -13,7 +13,10 @@ export const app = express();
 
 app.use(
   cors({
-    origin: [ENV.FRONTEND_URL, 'http://localhost:5173', 'http://127.0.0.1:5173'],
+    origin: (origin, callback) => {
+      // Allow any origin dynamically to support any deployed domain (Vercel, Render, local)
+      callback(null, true);
+    },
     credentials: true,
   })
 );

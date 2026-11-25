@@ -147,6 +147,7 @@ export const EmailTable: React.FC<EmailTableProps> = ({
           return (
             <div
               key={email.id}
+              data-testid="email-row"
               onClick={() => handleRowClick(email)}
               className="group flex items-center gap-4 border-b border-line px-4 sm:px-5 py-3 text-sm transition-colors hover:bg-[#fafafa] cursor-pointer select-none"
             >
@@ -174,6 +175,7 @@ export const EmailTable: React.FC<EmailTableProps> = ({
               {/* Star Icon */}
               <button
                 type="button"
+                data-testid="star-btn"
                 onClick={(e) => toggleStar(e, email.id)}
                 className="p-1 text-[#c4c4c4] hover:text-amber-400 transition"
               >
