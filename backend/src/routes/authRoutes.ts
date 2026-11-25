@@ -1,4 +1,4 @@
-import { Router, Response } from 'express';
+import { Router, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
 import { ENV } from '../config/env.js';
@@ -21,7 +21,7 @@ function setAuthCookie(res: Response, token: string) {
 }
 
 // GET /api/auth/me
-authRouter.get('/me', requireAuth, (req: AuthRequest, res) => {
+authRouter.get('/me', requireAuth, (req: AuthRequest, res: Response) => {
   if (!req.user) {
     return res.status(401).json({ error: 'Not authenticated' });
   }
@@ -40,7 +40,7 @@ authRouter.get('/me', requireAuth, (req: AuthRequest, res) => {
 });
 
 // GET /api/auth/google
-authRouter.get('/google', (req, res) => {
+authRouter.get('/google', (req: Request, res: Response) => {
   if (!ENV.GOOGLE_CLIENT_ID || !ENV.GOOGLE_CLIENT_SECRET) {
     return res.redirect(
       `${ENV.FRONTEND_URL}/login?error=Google+OAuth+credentials+not+configured+in+backend+.env.+Use+Dev+Login+for+local+testing.`
@@ -65,7 +65,7 @@ authRouter.get('/google', (req, res) => {
 });
 
 // GET /api/auth/google/callback
-authRouter.get('/google/callback', async (req, res) => {
+authRouter.get('/google/callback', async (req: Request, res: Response) => {
   const code = req.query.code as string;
 
   if (!code) {
@@ -130,7 +130,7 @@ authRouter.get('/google/callback', async (req, res) => {
 });
 
 // POST /api/auth/dev-login (Local dev evaluation helper)
-authRouter.post('/dev-login', async (req, res) => {
+authRouter.post('/dev-login', async (req: Request, res: Response) => {
   try {
     const devUser = await getOrCreateDevUser();
     const token = generateAuthToken(devUser.id, devUser.email);
@@ -154,7 +154,7 @@ authRouter.post('/dev-login', async (req, res) => {
 });
 
 // POST /api/auth/logout
-authRouter.post('/logout', (req, res) => {
+authRouter.post('/logout', (req: Request, res: Response) => {
   res.clearCookie('reachinbox_token');
   res.json({ success: true, message: 'Logged out successfully' });
 });

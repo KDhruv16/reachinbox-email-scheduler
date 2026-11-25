@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Response } from 'express';
 import { AuthRequest, requireAuth } from '../middleware/auth.js';
 import {
   scheduleEmails,
@@ -14,7 +14,7 @@ import { getEtherealCredentials } from '../lib/mailer.js';
 export const emailRouter = Router();
 
 // POST /api/emails/schedule
-emailRouter.post('/schedule', requireAuth, async (req: AuthRequest, res) => {
+emailRouter.post('/schedule', requireAuth, async (req: AuthRequest, res: Response) => {
   try {
     const {
       subject,
@@ -46,7 +46,7 @@ emailRouter.post('/schedule', requireAuth, async (req: AuthRequest, res) => {
 });
 
 // GET /api/emails/scheduled
-emailRouter.get('/scheduled', requireAuth, async (req: AuthRequest, res) => {
+emailRouter.get('/scheduled', requireAuth, async (req: AuthRequest, res: Response) => {
   try {
     const page = parseInt((req.query.page as string) || '1', 10);
     const limit = parseInt((req.query.limit as string) || '20', 10);
@@ -61,7 +61,7 @@ emailRouter.get('/scheduled', requireAuth, async (req: AuthRequest, res) => {
 });
 
 // GET /api/emails/sent
-emailRouter.get('/sent', requireAuth, async (req: AuthRequest, res) => {
+emailRouter.get('/sent', requireAuth, async (req: AuthRequest, res: Response) => {
   try {
     const page = parseInt((req.query.page as string) || '1', 10);
     const limit = parseInt((req.query.limit as string) || '20', 10);
@@ -76,7 +76,7 @@ emailRouter.get('/sent', requireAuth, async (req: AuthRequest, res) => {
 });
 
 // GET /api/emails/search
-emailRouter.get('/search', requireAuth, async (req: AuthRequest, res) => {
+emailRouter.get('/search', requireAuth, async (req: AuthRequest, res: Response) => {
   try {
     const query = (req.query.q as string) || '';
     const status = req.query.status as string;
@@ -91,7 +91,7 @@ emailRouter.get('/search', requireAuth, async (req: AuthRequest, res) => {
 });
 
 // GET /api/emails/stats
-emailRouter.get('/stats', requireAuth, async (req: AuthRequest, res) => {
+emailRouter.get('/stats', requireAuth, async (req: AuthRequest, res: Response) => {
   try {
     const stats = await getDashboardStats(req.user!.id);
     res.json(stats);
@@ -101,7 +101,7 @@ emailRouter.get('/stats', requireAuth, async (req: AuthRequest, res) => {
 });
 
 // GET /api/emails/smtp-info
-emailRouter.get('/smtp-info', requireAuth, (req: AuthRequest, res) => {
+emailRouter.get('/smtp-info', requireAuth, (req: AuthRequest, res: Response) => {
   const creds = getEtherealCredentials();
   res.json({
     smtp: {
@@ -115,7 +115,7 @@ emailRouter.get('/smtp-info', requireAuth, (req: AuthRequest, res) => {
 });
 
 // POST /api/emails/reindex
-emailRouter.post('/reindex', requireAuth, async (req: AuthRequest, res) => {
+emailRouter.post('/reindex', requireAuth, async (req: AuthRequest, res: Response) => {
   try {
     const result = await reindexAllEmails();
     res.json({ success: true, ...result });
@@ -125,7 +125,7 @@ emailRouter.post('/reindex', requireAuth, async (req: AuthRequest, res) => {
 });
 
 // GET /api/emails/:id
-emailRouter.get('/:id', requireAuth, async (req: AuthRequest, res) => {
+emailRouter.get('/:id', requireAuth, async (req: AuthRequest<{ id: string }>, res: Response) => {
   try {
     const email = await getEmailById(req.user!.id, req.params.id);
     res.json(email);
@@ -135,7 +135,7 @@ emailRouter.get('/:id', requireAuth, async (req: AuthRequest, res) => {
 });
 
 // DELETE /api/emails/:id
-emailRouter.delete('/:id', requireAuth, async (req: AuthRequest, res) => {
+emailRouter.delete('/:id', requireAuth, async (req: AuthRequest<{ id: string }>, res: Response) => {
   try {
     const result = await cancelScheduledEmail(req.user!.id, req.params.id);
     res.json(result);

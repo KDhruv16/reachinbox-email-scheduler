@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { redisConnection } from '../config/redis.js';
 import { prisma } from '../lib/prisma.js';
 import { isElasticsearchReady } from '../config/elasticsearch.js';
@@ -6,7 +6,7 @@ import { isElasticsearchReady } from '../config/elasticsearch.js';
 export const healthRouter = Router();
 
 // GET /api/health
-healthRouter.get('/health', async (req, res) => {
+healthRouter.get('/health', async (req: Request, res: Response) => {
   const health: {
     status: string;
     timestamp: string;

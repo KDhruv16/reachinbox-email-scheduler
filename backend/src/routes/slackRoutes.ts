@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { AuthRequest, requireAuth } from '../middleware/auth.js';
 import { ENV } from '../config/env.js';
 import { exchangeSlackCodeForToken, sendSlackNotification } from '../lib/slack.js';
@@ -7,7 +7,7 @@ import { prisma } from '../lib/prisma.js';
 export const slackRouter = Router();
 
 // GET /api/slack/connect
-slackRouter.get('/connect', requireAuth, (req: AuthRequest, res) => {
+slackRouter.get('/connect', requireAuth, (req: AuthRequest, res: Response) => {
   if (!ENV.SLACK_CLIENT_ID || !ENV.SLACK_CLIENT_SECRET) {
     return res.redirect(
       `${ENV.FRONTEND_URL}/integrations?error=Slack+OAuth+credentials+not+configured+in+backend+.env.`
@@ -27,7 +27,7 @@ slackRouter.get('/connect', requireAuth, (req: AuthRequest, res) => {
 });
 
 // GET /api/slack/callback
-slackRouter.get('/callback', async (req, res) => {
+slackRouter.get('/callback', async (req: Request, res: Response) => {
   const code = req.query.code as string;
   const stateUserId = req.query.state as string;
 
