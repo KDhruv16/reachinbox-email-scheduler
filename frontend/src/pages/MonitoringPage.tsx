@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { healthApi } from '../api/client';
+import { healthApi, API_BASE } from '../api/client';
 import { ExternalLink, RotateCw, Server, Database, Activity } from 'lucide-react';
 
 export const MonitoringPage: React.FC = () => {
@@ -22,7 +22,7 @@ export const MonitoringPage: React.FC = () => {
     fetchHealth();
   }, []);
 
-  const bullBoardUrl = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/admin/queues`;
+  const bullBoardUrl = `${API_BASE}/admin/queues`;
 
   return (
     <div className="flex h-full flex-col space-y-4 overflow-y-auto pr-1">

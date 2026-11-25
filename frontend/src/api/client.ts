@@ -1,11 +1,28 @@
 import axios from 'axios';
 import { User, EmailJob, DashboardStats, ScheduleEmailPayload, SmtpInfo } from '../types';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+const getApiBase = (): string => {
+  const envUrl = import.meta.env.VITE_API_BASE_URL;
+  // If envUrl is set and does not point to the stale placeholder without -9xts
+  if (envUrl && !envUrl.includes('reachinbox-email-scheduler-api.onrender.com')) {
+    return envUrl;
+  }
+  // When running on Render or if stale placeholder was provided
+  if (typeof window !== 'undefined' && window.location.hostname.includes('onrender.com')) {
+    return 'https://reachinbox-email-scheduler-api-9xts.onrender.com';
+  }
+  if (envUrl) {
+    return envUrl;
+  }
+  return 'http://localhost:5000';
+};
+
+export const API_BASE = getApiBase();
 
 export const apiClient = axios.create({
   baseURL: API_BASE,
   withCredentials: true,
+  timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },

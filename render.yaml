@@ -23,7 +23,7 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: FRONTEND_URL
-        value: https://reachinbox-email-scheduler-frontend.onrender.com
+        value: https://reachinbox-email-scheduler-frontend-ge7w.onrender.com
       - key: ETHEREAL_HOST
         value: smtp.ethereal.email
       - key: ETHEREAL_PORT
@@ -54,7 +54,7 @@ services:
         destination: /index.html
     envVars:
       - key: VITE_API_BASE_URL
-        value: https://reachinbox-email-scheduler-api.onrender.com
+        value: https://reachinbox-email-scheduler-api-9xts.onrender.com
 
 databases:
   # Free Production PostgreSQL Database

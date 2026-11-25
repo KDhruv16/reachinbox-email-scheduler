@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User } from '../types';
-import { authApi } from '../api/client';
+import { API_BASE, authApi } from '../api/client';
 
 interface AuthContextType {
   user: User | null;
@@ -18,12 +18,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   const refreshUser = async () => {
+    // Safety timer to prevent remaining stuck on loading spinner if network hangs
+    const safetyTimer = setTimeout(() => {
+      setLoading(false);
+    }, 6000);
+
     try {
       const data = await authApi.me();
       setUser(data.user);
     } catch {
       setUser(null);
     } finally {
+      clearTimeout(safetyTimer);
       setLoading(false);
     }
   };
@@ -33,8 +39,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const loginWithGoogle = () => {
-    const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
-    window.location.href = `${apiBase}/api/auth/google`;
+    window.location.href = `${API_BASE}/api/auth/google`;
   };
 
   const loginWithDev = async () => {

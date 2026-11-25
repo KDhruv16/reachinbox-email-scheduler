@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { slackApi, emailApi } from '../api/client';
+import { slackApi, emailApi, API_BASE } from '../api/client';
 import { SmtpInfo } from '../types';
 import {
   MessageSquare,
@@ -22,8 +22,7 @@ export const IntegrationsPage: React.FC = () => {
   }, []);
 
   const handleConnectSlack = () => {
-    const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
-    window.location.href = `${apiBase}/api/slack/connect`;
+    window.location.href = `${API_BASE}/api/slack/connect`;
   };
 
   const handleDisconnectSlack = async () => {
