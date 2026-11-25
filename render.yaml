@@ -19,11 +19,11 @@ services:
           name: reachinbox-postgres-db
           property: connectionString
       - key: REDIS_URL
-        sync: false
+        value: ""
       - key: JWT_SECRET
         generateValue: true
       - key: FRONTEND_URL
-        value: https://reachinbox-scheduler.vercel.app
+        value: https://reachinbox-email-scheduler-frontend.onrender.com
       - key: ETHEREAL_HOST
         value: smtp.ethereal.email
       - key: ETHEREAL_PORT
@@ -45,7 +45,6 @@ services:
   - type: web
     name: reachinbox-email-scheduler-frontend
     runtime: static
-    plan: free
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
@@ -55,10 +54,7 @@ services:
         destination: /index.html
     envVars:
       - key: VITE_API_BASE_URL
-        fromService:
-          type: web
-          name: reachinbox-email-scheduler-api
-          property: host
+        value: https://reachinbox-email-scheduler-api.onrender.com
 
 databases:
   # Free Production PostgreSQL Database
